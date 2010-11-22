@@ -13,10 +13,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     graphscene.cpp \
-    graphicsnodeitem.cpp
+    graphicsnodeitem.cpp \
+    graphicsedgeitem.cpp \
+    graphicstextitem.cpp
 
 HEADERS  += mainwindow.h \
     graphscene.h \
-    graphicsnodeitem.h
+    graphicsnodeitem.h \
+    graphicsedgeitem.h \
+    graphicstextitem.h
 
 FORMS    += mainwindow.ui

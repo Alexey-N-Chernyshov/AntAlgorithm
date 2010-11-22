@@ -1,11 +1,22 @@
+#include <QGraphicsScene>
+#include <QPainter>
+
 #include "graphicsnodeitem.h"
+#include "graphicsedgeitem.h"
 
 GraphicsNodeItem::GraphicsNodeItem(QGraphicsItem *parent) :
         QGraphicsItem(parent),
         m_type(SimpleNode)
 {
-    setFlags(ItemIsSelectable | ItemIsMovable);
+    setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges | ItemIsFocusable);
     setZValue(-1);
+}
+
+GraphicsNodeItem::~GraphicsNodeItem()
+{
+    foreach (GraphicsEdgeItem *edge, edges)
+        delete edge;
+    scene()->removeItem(this);
 }
 
 void GraphicsNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -13,11 +24,9 @@ void GraphicsNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     Q_UNUSED(widget);
 
     painter->setPen(Qt::NoPen);
-    painter->setBrush(Qt::lightGray);
-    painter->drawEllipse(-6, -7, 16, 16);
 
     QRadialGradient gradient(-3, -3, 7);
-    if (option->state & QStyle::State_Sunken) {
+    if (isSelected()) {
         gradient.setColorAt(0, QColor(Qt::white));
         gradient.setColorAt(1, QColor(Qt::darkGray));
     } else {
@@ -51,23 +60,27 @@ QPainterPath GraphicsNodeItem::shape() const
     return path;
 }
 
-void GraphicsNodeItem::setType(TypeNode type)
+void GraphicsNodeItem::setTypeNode(TypeNode type)
 {
     m_type = type;
 }
 
-int GraphicsNodeItem::getType() const
+void GraphicsNodeItem::addEdge(GraphicsEdgeItem *edge)
 {
-    return m_type;
+    edges.append(edge);
+}
+
+void GraphicsNodeItem::removeEdge(GraphicsEdgeItem *edge)
+{
+    edges.removeAt(edges.indexOf(edge));
 }
 
 QVariant GraphicsNodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
     case ItemPositionHasChanged:
-//        foreach (Edge *edge, edgeList)
-//            edge->adjust();
-//        graph->itemMoved();
+        foreach (GraphicsEdgeItem *edge, edges)
+            edge->update();
         break;
     default:
         break;

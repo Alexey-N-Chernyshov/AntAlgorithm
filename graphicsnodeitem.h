@@ -2,9 +2,8 @@
 #define GRAPHICSNODEITEM_H
 
 #include <QGraphicsItem>
-#include <QPainter>
-#include <QRectF>
-#include <QStyleOptionGraphicsItem>
+
+class GraphicsEdgeItem;
 
 class GraphicsNodeItem : public QGraphicsItem
 {
@@ -12,21 +11,22 @@ public:
     enum TypeNode{ StartNode, SimpleNode, EndNode };
 
     GraphicsNodeItem(QGraphicsItem *parent = 0);
+    ~GraphicsNodeItem();
 
+    void setTypeNode(TypeNode type);
+    void addEdge(GraphicsEdgeItem *edge);
+    void removeEdge(GraphicsEdgeItem *edge);
+
+protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     QRectF boundingRect() const;
     QPainterPath shape() const;
-    void setType(TypeNode type);
-    int getType() const;
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
     TypeNode m_type;
-
-signals:
-
-public slots:
-
+    QList<GraphicsEdgeItem *> edges;
 };
 
 #endif // GRAPHICSNODEITEM_H

@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <graphscene.h>
+
+class GraphScene;
 
 namespace Ui {
     class MainWindow;

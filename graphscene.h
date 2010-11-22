@@ -2,8 +2,6 @@
 #define GRAPHSCENE_H
 
 #include <QGraphicsScene>
-#include <QGraphicsSceneMouseEvent>
-#include "graphicsnodeitem.h"
 
 class GraphScene : public QGraphicsScene
 {
