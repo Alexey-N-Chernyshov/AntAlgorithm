@@ -4,15 +4,18 @@
 #include <QGraphicsItem>
 
 class GraphicsEdgeItem;
+class QMenu;
 
 class GraphicsNodeItem : public QGraphicsItem
 {
 public:
-    enum TypeNode{ StartNode, SimpleNode, EndNode };
+    enum { Type = UserType + 11 };
+    enum TypeNode{ InitialNode, IntermediateNode, FinitNode };
 
-    GraphicsNodeItem(QGraphicsItem *parent = 0);
+    GraphicsNodeItem(QMenu *contextMenu, QGraphicsItem *parent = 0);
     ~GraphicsNodeItem();
 
+    int type() const;
     void setTypeNode(TypeNode type);
     void addEdge(GraphicsEdgeItem *edge);
     void removeEdge(GraphicsEdgeItem *edge);
@@ -24,9 +27,12 @@ protected:
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
+private:
     TypeNode m_type;
     QList<GraphicsEdgeItem *> edges;
+    QMenu *menu;
 };
 
 #endif // GRAPHICSNODEITEM_H

@@ -9,9 +9,11 @@ class GraphicsNodeItem;
 class GraphicsEdgeItem : public QGraphicsItem
 {
 public:
+    enum { Type = UserType + 10 };
     explicit GraphicsEdgeItem(GraphicsNodeItem *sourceNode, GraphicsNodeItem *destNode, QGraphicsItem *parent = 0);
     ~GraphicsEdgeItem();
 
+    int type() const;
     void setLowerValue(double val);
     void setShowLowerValue(bool val);
 

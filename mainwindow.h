@@ -32,9 +32,17 @@ private:
     QAction *actionSetModeAddPoint;
     QAction *actionSetModeAddLine;
 
+    QAction *actionSetPointModeInitial;
+    QAction *actionSetPointModeIntermediate;
+    QAction *actionSetPointModeFinit;
+    QAction *actionRemovePoint;
+
+    QMenu *menuPoint;
+
     QToolBar *toolBarModes;
 
     void createActions();
+    void createMenus();
     void createToolBars();
 };
 

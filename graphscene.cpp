@@ -5,22 +5,16 @@
 #include "graphscene.h"
 
 GraphScene::GraphScene(int w, int h, QObject *parent) :
-    QGraphicsScene(parent)
+        QGraphicsScene(parent),
+        m_mode(AddPointMode),
+        line(NULL)
 {
-    m_mode = AddPointMode;
-    line = 0;
     setSceneRect(0, 0, w, h);
+}
 
-//    GraphicsNodeItem *newNode1 = new GraphicsNodeItem();
-//    GraphicsNodeItem *newNode2 = new GraphicsNodeItem();
-//    GraphicsEdgeItem *newEdge = new GraphicsEdgeItem(newNode1, newNode2);
-//    addItem(newNode1);
-//    addItem(newNode2);
-//    addItem(newEdge);
-//    newNode1->setPos(10, 10);
-//    newNode2->setPos(100, 10);
-//    newNode1->setTypeNode(GraphicsNodeItem::StartNode);
-//    newNode2->setTypeNode(GraphicsNodeItem::EndNode);
+void GraphScene::setContextMenuForPoint(QMenu *contextMenu)
+{
+    menu = contextMenu;
 }
 
 void GraphScene::setMode(Mode mode)
@@ -43,9 +37,34 @@ void GraphScene::setAddLineMode()
     m_mode = AddLineMode;
 }
 
+void GraphScene::setInitialPoint()
+{
+    if (!selectedItems().isEmpty())
+        if (selectedItems().first()->type() == GraphicsNodeItem::Type)
+            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0])->setTypeNode(GraphicsNodeItem::InitialNode);
+    update();
+}
+
+void GraphScene::setIntermediatePoint()
+{
+    if (!selectedItems().isEmpty())
+        if (selectedItems().first()->type() == GraphicsNodeItem::Type)
+            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0])->setTypeNode(GraphicsNodeItem::IntermediateNode);
+    update();
+}
+
+void GraphScene::setFinitPoint()
+{
+    if (!selectedItems().isEmpty())
+        if (selectedItems().first()->type() == GraphicsNodeItem::Type)
+            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0])->setTypeNode(GraphicsNodeItem::FinitNode);
+    update();
+}
+
 void GraphScene::deleteSelectedItems()
 {
-    ;
+    foreach (QGraphicsItem *item, selectedItems())
+        delete item;
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -58,7 +77,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsScene::mousePressEvent(event);
         break;
     case AddPointMode:
-        GraphicsNodeItem *newNode = new GraphicsNodeItem();
+        GraphicsNodeItem *newNode = new GraphicsNodeItem(menu);
         addItem(newNode);
         newNode->setPos(event->scenePos());
         break;

@@ -1,12 +1,15 @@
 #include <QGraphicsScene>
 #include <QPainter>
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
 
 #include "graphicsnodeitem.h"
 #include "graphicsedgeitem.h"
 
-GraphicsNodeItem::GraphicsNodeItem(QGraphicsItem *parent) :
+GraphicsNodeItem::GraphicsNodeItem(QMenu *contextMenu, QGraphicsItem *parent) :
         QGraphicsItem(parent),
-        m_type(SimpleNode)
+        m_type(IntermediateNode),
+        menu(contextMenu)
 {
     setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges | ItemIsFocusable);
     setZValue(-1);
@@ -38,10 +41,10 @@ void GraphicsNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->drawEllipse(-8, -8, 16, 16);
     painter->setPen(Qt::black);
     switch (m_type) {
-    case StartNode:
+    case InitialNode:
         painter->drawText(-15, -20, 30, 14, Qt::AlignBottom | Qt::AlignHCenter, "Start");
         break;
-    case EndNode:
+    case FinitNode:
         painter->drawText(-15, -20, 30, 14, Qt::AlignBottom | Qt::AlignHCenter, "End");
         break;
     default:
@@ -59,6 +62,11 @@ QPainterPath GraphicsNodeItem::shape() const
     QPainterPath path;
     path.addEllipse(-8, -8, 16, 16);
     return path;
+}
+
+int GraphicsNodeItem::type() const
+{
+    return Type;
 }
 
 void GraphicsNodeItem::setTypeNode(TypeNode type)
@@ -89,3 +97,11 @@ QVariant GraphicsNodeItem::itemChange(GraphicsItemChange change, const QVariant 
 
     return QGraphicsItem::itemChange(change, value);
 }
+
+void GraphicsNodeItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    scene()->clearSelection();
+    setSelected(true);
+    menu->exec(event->screenPos());
+}
+

@@ -30,6 +30,11 @@ GraphicsEdgeItem::~GraphicsEdgeItem()
     delete upperTextItem;
 }
 
+int GraphicsEdgeItem::type() const
+{
+    return Type;
+}
+
 void GraphicsEdgeItem::setLowerValue(double val)
 {
     lowerValue = val;

@@ -3,6 +3,8 @@
 
 #include <QGraphicsScene>
 
+class QMenu;
+
 class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -12,14 +14,18 @@ public:
 
     explicit GraphScene(int w, int h, QObject *parent = 0);
 
+    void setContextMenuForPoint(QMenu *contextMenu);
+
 public slots:
     void setMode(Mode mode);
     void setSelectMode();
     void setAddPoinrMode();
     void setAddLineMode();
-    void deleteSelectedItems();
 
-signals:
+    void setInitialPoint();
+    void setIntermediatePoint();
+    void setFinitPoint();
+    void deleteSelectedItems();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -27,6 +33,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+    QMenu *menu;
     Mode m_mode;
     QGraphicsLineItem *line;
 };

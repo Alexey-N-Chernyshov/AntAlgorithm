@@ -3,5 +3,6 @@
         <file>images/round.png</file>
         <file>images/line.png</file>
         <file>images/arrow.png</file>
+        <file>images/minus.png</file>
     </qresource>
 </RCC>
