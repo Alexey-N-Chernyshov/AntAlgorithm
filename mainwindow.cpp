@@ -90,7 +90,7 @@ void MainWindow::createMenus()
 
 void MainWindow::createToolBars()
 {
-    toolBarModes = new QToolBar(tr("Graph toolbar"), this);
+    toolBarModes = addToolBar(tr("Graph toolbar"));
     toolBarModes->addActions(actionGroupModes->actions());
     toolBarModes->addSeparator();
     toolBarModes->addAction(actionRemovePoint);
