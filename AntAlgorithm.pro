@@ -24,3 +24,6 @@ HEADERS  += mainwindow.h \
     graphicstextitem.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    icons.qrc

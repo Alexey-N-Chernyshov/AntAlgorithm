@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class GraphScene;
+class QActionGroup;
 
 namespace Ui {
     class MainWindow;
@@ -25,6 +26,16 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+
+    QActionGroup *actionGroupModes;
+    QAction *actionSetModeSelect;
+    QAction *actionSetModeAddPoint;
+    QAction *actionSetModeAddLine;
+
+    QToolBar *toolBarModes;
+
+    void createActions();
+    void createToolBars();
 };
 
 #endif // MAINWINDOW_H
