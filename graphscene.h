@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 
 class QMenu;
+class GraphicsNodeItem;
 
 class GraphScene : public QGraphicsScene
 {
@@ -36,6 +37,8 @@ private:
     QMenu *menu;
     Mode m_mode;
     QGraphicsLineItem *line;
+    GraphicsNodeItem *initialNode;
+    GraphicsNodeItem *finitNode;
 };
 
 #endif // GRAPHSCENE_H

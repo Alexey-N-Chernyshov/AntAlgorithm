@@ -69,9 +69,14 @@ int GraphicsNodeItem::type() const
     return Type;
 }
 
-void GraphicsNodeItem::setTypeNode(TypeNode type)
+void GraphicsNodeItem::setTypeNode(TypeNode typeNode)
 {
-    m_type = type;
+    m_type = typeNode;
+}
+
+int GraphicsNodeItem::typeNode()
+{
+    return m_type;
 }
 
 void GraphicsNodeItem::addEdge(GraphicsEdgeItem *edge)

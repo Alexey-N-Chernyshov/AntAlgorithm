@@ -7,7 +7,9 @@
 GraphScene::GraphScene(int w, int h, QObject *parent) :
         QGraphicsScene(parent),
         m_mode(AddPointMode),
-        line(NULL)
+        line(NULL),
+        initialNode(NULL),
+        finitNode(NULL)
 {
     setSceneRect(0, 0, w, h);
 }
@@ -41,7 +43,13 @@ void GraphScene::setInitialPoint()
 {
     if (!selectedItems().isEmpty())
         if (selectedItems().first()->type() == GraphicsNodeItem::Type)
-            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0])->setTypeNode(GraphicsNodeItem::InitialNode);
+        {
+            if (initialNode)
+                initialNode->setTypeNode(GraphicsNodeItem::IntermediateNode);
+            initialNode = qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0]);
+            initialNode->setTypeNode(GraphicsNodeItem::InitialNode);
+        }
+
     update();
 }
 
@@ -57,14 +65,25 @@ void GraphScene::setFinitPoint()
 {
     if (!selectedItems().isEmpty())
         if (selectedItems().first()->type() == GraphicsNodeItem::Type)
-            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0])->setTypeNode(GraphicsNodeItem::FinitNode);
+        {
+            if (finitNode)
+                finitNode->setTypeNode(GraphicsNodeItem::IntermediateNode);
+            finitNode = qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0]);
+            finitNode->setTypeNode(GraphicsNodeItem::FinitNode);
+        }
     update();
 }
 
 void GraphScene::deleteSelectedItems()
 {
     foreach (QGraphicsItem *item, selectedItems())
+    {
+        if (item == initialNode)
+            initialNode = NULL;
+        if (item == finitNode)
+            finitNode = NULL;
         delete item;
+    }
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -78,6 +97,11 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         break;
     case AddPointMode:
         GraphicsNodeItem *newNode = new GraphicsNodeItem(menu);
+        if (items().isEmpty())
+        {
+            newNode->setTypeNode(GraphicsNodeItem::InitialNode);
+            initialNode = newNode;
+        }
         addItem(newNode);
         newNode->setPos(event->scenePos());
         break;

@@ -10,13 +10,14 @@ class GraphicsNodeItem : public QGraphicsItem
 {
 public:
     enum { Type = UserType + 11 };
-    enum TypeNode{ InitialNode, IntermediateNode, FinitNode };
+    enum TypeNode { InitialNode, IntermediateNode, FinitNode };
 
     GraphicsNodeItem(QMenu *contextMenu, QGraphicsItem *parent = 0);
     ~GraphicsNodeItem();
 
     int type() const;
-    void setTypeNode(TypeNode type);
+    void setTypeNode(TypeNode typeNode);
+    int typeNode();
     void addEdge(GraphicsEdgeItem *edge);
     void removeEdge(GraphicsEdgeItem *edge);
 
