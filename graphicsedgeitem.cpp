@@ -22,8 +22,10 @@ GraphicsEdgeItem::GraphicsEdgeItem(GraphicsNodeItem *sourceNode, GraphicsNodeIte
 
 GraphicsEdgeItem::~GraphicsEdgeItem()
 {
-    source->removeEdge(this);
-    dest->removeEdge(this);
+    if (source)
+        source->removeEdge(this);
+    if (dest)
+        dest->removeEdge(this);
     scene()->removeItem(this);
 
     delete line;

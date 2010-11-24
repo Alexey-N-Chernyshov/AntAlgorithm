@@ -76,6 +76,12 @@ void GraphScene::setFinitPoint()
 
 void GraphScene::deleteSelectedItems()
 {
+    //firstly delete edges
+    foreach (QGraphicsItem *item, selectedItems())
+        if (item->type() == GraphicsEdgeItem::Type)
+            delete item;
+
+    //then delete nodes
     foreach (QGraphicsItem *item, selectedItems())
     {
         if (item == initialNode)
@@ -103,34 +109,63 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
              }
              addItem(newNode);
              newNode->setPos(event->scenePos());
-             QGraphicsScene::mousePressEvent(event);
              break;
         }
         case AddLineMode:
-            //QGraphicsScene::mousePressEvent(event);
+        {
+            QGraphicsItem *startItem = itemAt(event->scenePos());
+            if ((startItem) && (startItem->type() == GraphicsNodeItem::Type))
+            {
+                line = new QGraphicsLineItem(QLineF(startItem->pos(), startItem->pos()), 0, this);
+                line->setPen(QPen(QColor(Qt::darkGray).lighter(150), 3));
+                line->setZValue(-3);
+            }
             break;
+        }
         case SelectMode:
-            QGraphicsScene::mousePressEvent(event);
             break;
         default:
             break;
     }
-
-    //QGraphicsScene::mousePressEvent(event);
-
-//    GraphicsNodeItem *newNode = new GraphicsNodeItem();
-//    addItem(newNode);
-//    newNode->setPos(event->pos());
-//    newNode->setTypeNode(GraphicsNodeItem::StartNode);
-//    QGraphicsScene::mousePressEvent(event);
+    QGraphicsScene::mousePressEvent(event);
 }
 
 void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsScene::mouseMoveEvent(event);
+    if ((m_mode == AddLineMode) && (line))
+    {
+        clearSelection();
+        itemAt(line->line().p1())->setSelected(true);
+        QGraphicsItem *hoveredItem = itemAt(event->scenePos());
+        if (hoveredItem && (hoveredItem->type() == GraphicsNodeItem::Type))
+            hoveredItem->setSelected(true);
+        line->setLine(QLineF(line->line().p1(), event->scenePos()));
+    }
+    else
+        QGraphicsScene::mouseMoveEvent(event);
 }
 
 void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsScene::mouseReleaseEvent(event);
+    if (m_mode == AddLineMode)
+    {
+        if (line)
+        {
+            QGraphicsItem *destItem = itemAt(event->scenePos());
+            if (destItem && (destItem->type() == GraphicsNodeItem::Type))
+            {
+                GraphicsEdgeItem *newEdge = new GraphicsEdgeItem(qgraphicsitem_cast<GraphicsNodeItem *>(itemAt(line->line().p1())),
+                                                                 qgraphicsitem_cast<GraphicsNodeItem *>(destItem));
+                addItem(newEdge);
+            }
+            removeItem(line);
+            if (line)
+                delete line;
+            line = NULL;
+        }
+        clearSelection();
+        QGraphicsScene::mouseReleaseEvent(event);
+    }
+    else
+        QGraphicsScene::mouseReleaseEvent(event);
 }
