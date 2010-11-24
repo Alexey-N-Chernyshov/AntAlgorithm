@@ -7,6 +7,8 @@
 #include "ui_mainwindow.h"
 #include "graphscene.h"
 
+#include <QGraphicsEllipseItem>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QTextCodec::setCodecForTr(QTextCodec::codecForName("cp1251"));
 
-    graphScene = new GraphScene(ui->graphicsView->width(), ui->graphicsView->height(), this);//menuPoint, this);
+    graphScene = new GraphScene(ui->graphicsView->width(), ui->graphicsView->height(), this);
+    ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsView->setScene(graphScene);
 
     createActions();

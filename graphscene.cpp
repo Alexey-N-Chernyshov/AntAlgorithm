@@ -91,21 +91,31 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->button() != Qt::LeftButton)
         return;
 
-    switch (m_mode) {
-    case SelectMode:
-        QGraphicsScene::mousePressEvent(event);
-        break;
-    case AddPointMode:
-        GraphicsNodeItem *newNode = new GraphicsNodeItem(menu);
-        if (items().isEmpty())
+    switch (m_mode)
+    {
+        case AddPointMode:
         {
-            newNode->setTypeNode(GraphicsNodeItem::InitialNode);
-            initialNode = newNode;
+             GraphicsNodeItem *newNode = new GraphicsNodeItem(menu);
+             if (items().isEmpty())
+             {
+                 newNode->setTypeNode(GraphicsNodeItem::InitialNode);
+                 initialNode = newNode;
+             }
+             addItem(newNode);
+             newNode->setPos(event->scenePos());
+             QGraphicsScene::mousePressEvent(event);
+             break;
         }
-        addItem(newNode);
-        newNode->setPos(event->scenePos());
-        break;
+        case AddLineMode:
+            //QGraphicsScene::mousePressEvent(event);
+            break;
+        case SelectMode:
+            QGraphicsScene::mousePressEvent(event);
+            break;
+        default:
+            break;
     }
+
     //QGraphicsScene::mousePressEvent(event);
 
 //    GraphicsNodeItem *newNode = new GraphicsNodeItem();

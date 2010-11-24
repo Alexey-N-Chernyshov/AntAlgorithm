@@ -40,15 +40,16 @@ void GraphicsNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setBrush(gradient);
     painter->drawEllipse(-8, -8, 16, 16);
     painter->setPen(Qt::black);
-    switch (m_type) {
-    case InitialNode:
-        painter->drawText(-15, -20, 30, 14, Qt::AlignBottom | Qt::AlignHCenter, "Start");
-        break;
-    case FinitNode:
-        painter->drawText(-15, -20, 30, 14, Qt::AlignBottom | Qt::AlignHCenter, "End");
-        break;
-    default:
-        break;
+    switch (m_type)
+    {
+        case InitialNode:
+            painter->drawText(-15, -20, 30, 14, Qt::AlignBottom | Qt::AlignHCenter, "Start");
+            break;
+        case FinitNode:
+            painter->drawText(-15, -20, 30, 14, Qt::AlignBottom | Qt::AlignHCenter, "End");
+            break;
+        default:
+            break;
     }
 }
 
