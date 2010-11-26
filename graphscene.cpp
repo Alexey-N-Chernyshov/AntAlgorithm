@@ -1,4 +1,5 @@
 #include <QGraphicsSceneMouseEvent>
+#include <QVector>
 
 #include "graphicsnodeitem.h"
 #include "graphicsedgeitem.h"
@@ -18,6 +19,30 @@ GraphScene::GraphScene(int w, int h, QObject *parent) :
 void GraphScene::setContextMenuForPoint(QMenu *contextMenu)
 {
     menu = contextMenu;
+}
+
+int GraphScene::getInit() const
+{
+    return listNodes.indexOf(initialNode);
+}
+
+int GraphScene::getFinit() const
+{
+    return listNodes.indexOf(finitNode);
+}
+
+QList< QVector<float> > GraphScene::getWeights()
+{
+    QList< QVector<float> > res;
+    for (QList<GraphicsNodeItem *>::iterator i = listNodes.begin(); i != listNodes.end(); ++i)
+    {
+        QList< QPair<GraphicsNodeItem *, float> > connectedNodes = (*i)->getConnections();
+        QVector<float> resWeights(listNodes.count(), 0.);
+        for (QList< QPair<GraphicsNodeItem *, float> >::iterator j = connectedNodes.begin(); j != connectedNodes.end(); ++j)
+            resWeights[listNodes.indexOf((*j).first)] = (*j).second;
+        res.append(resWeights);
+    }
+    return res;
 }
 
 void GraphScene::setMode(Mode mode)
@@ -91,6 +116,12 @@ void GraphScene::deleteSelectedItems()
         listNodes.removeAll(qgraphicsitem_cast<GraphicsNodeItem *>(item));
         delete item;
     }
+    nodesChanged();
+}
+
+void GraphScene::nodesChanged()
+{
+    emit signalNodesChanged(getWeights());
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -112,6 +143,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
              addItem(newNode);
              listNodes.append(newNode);
              newNode->setPos(event->scenePos());
+             nodesChanged();
              break;
         }
         case AddLineMode:
@@ -161,15 +193,18 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             {
                 GraphicsEdgeItem *newEdge = new GraphicsEdgeItem(startLineNode, destNode);
                 addItem(newEdge);
+                nodesChanged();
             }
-
-            startLineNode = NULL;
-
-            removeItem(line);
-            if (line)
-                delete line;
-            line = NULL;
         }
+
+        startLineNode = NULL;
+        if (line)
+        {
+            removeItem(line);
+            delete line;
+        }
+        line = NULL;
+
         clearSelection();
         QGraphicsScene::mouseReleaseEvent(event);
     }

@@ -15,13 +15,17 @@ SOURCES += main.cpp\
     graphscene.cpp \
     graphicsnodeitem.cpp \
     graphicsedgeitem.cpp \
-    graphicstextitem.cpp
+    graphicstextitem.cpp \
+    ant.cpp \
+    antalgorithm.cpp
 
 HEADERS  += mainwindow.h \
     graphscene.h \
     graphicsnodeitem.h \
     graphicsedgeitem.h \
-    graphicstextitem.h
+    graphicstextitem.h \
+    ant.h \
+    antalgorithm.h
 
 FORMS    += mainwindow.ui
 

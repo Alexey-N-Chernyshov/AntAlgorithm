@@ -53,14 +53,19 @@ void GraphicsEdgeItem::setShowLowerValue(bool val)
     showLowerValue = val;
 }
 
-const GraphicsNodeItem *GraphicsEdgeItem::getSourceNode() const
+GraphicsNodeItem *GraphicsEdgeItem::getSourceNode() const
 {
     return source;
 }
 
-const GraphicsNodeItem *GraphicsEdgeItem::getDestinationNode() const
+GraphicsNodeItem *GraphicsEdgeItem::getDestinationNode() const
 {
     return dest;
+}
+
+float GraphicsEdgeItem::getWeight() const
+{
+    return upperTextItem->toPlainText().toFloat();
 }
 
 QRectF GraphicsEdgeItem::boundingRect() const

@@ -98,6 +98,17 @@ bool GraphicsNodeItem::isConnected(GraphicsNodeItem *otherNode)
     return false;
 }
 
+QList <QPair<GraphicsNodeItem *, float> > GraphicsNodeItem::getConnections()
+{
+    QList <QPair<GraphicsNodeItem *, float> > res;
+    foreach (GraphicsEdgeItem *edge, edges)
+        if (edge->getSourceNode() != this)
+            res.append(QPair<GraphicsNodeItem *, float>(edge->getSourceNode(), edge->getWeight()));
+        else if (edge->getDestinationNode() != this)
+            res.append(QPair<GraphicsNodeItem *, float>(edge->getDestinationNode(), edge->getWeight()));
+    return res;
+}
+
 QVariant GraphicsNodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change)

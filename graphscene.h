@@ -16,6 +16,8 @@ public:
     explicit GraphScene(int w, int h, QObject *parent = 0);
 
     void setContextMenuForPoint(QMenu *contextMenu);
+    int getInit() const;
+    int getFinit() const;
 
 public slots:
     void setMode(Mode mode);
@@ -28,6 +30,10 @@ public slots:
     void setFinitPoint();
 
     void deleteSelectedItems();
+    void nodesChanged();
+
+signals:
+    void signalNodesChanged(QList< QVector<float> > weights);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -35,6 +41,8 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+    QList< QVector<float> > getWeights();
+
     QMenu *menu;
     Mode m_mode;
     GraphicsNodeItem *startLineNode;

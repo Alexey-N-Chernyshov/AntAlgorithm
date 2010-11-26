@@ -17,8 +17,9 @@ public:
     void setColor(QColor color);
     void setLowerValue(double val);
     void setShowLowerValue(bool val);
-    const GraphicsNodeItem *getSourceNode() const;
-    const GraphicsNodeItem *getDestinationNode() const;
+    GraphicsNodeItem *getSourceNode() const;
+    GraphicsNodeItem *getDestinationNode() const;
+    float getWeight() const;
 
 protected:
     QRectF boundingRect() const;

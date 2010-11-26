@@ -3,6 +3,7 @@
 #include <QKeyEvent>
 
 #include "graphicstextitem.h"
+#include "graphscene.h"
 
 GraphicsTextItem::GraphicsTextItem(QString str, QGraphicsItem *parent) :
     QGraphicsTextItem(parent)
@@ -32,4 +33,5 @@ void GraphicsTextItem::keyPressEvent(QKeyEvent *event)
         if (!event->text().at(0).isDigit() || (toPlainText().length() >= 4))
             return;
     QGraphicsTextItem::keyPressEvent(event);
+    qobject_cast<GraphScene *>(scene())->nodesChanged();
 }

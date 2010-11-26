@@ -5,6 +5,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "antalgorithm.h"
 #include "graphscene.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -14,7 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QTextCodec::setCodecForTr(QTextCodec::codecForName("cp1251"));
 
+    antAlgorithm = new AntAlgorithm;
+
     graphScene = new GraphScene(ui->graphicsView->width(), ui->graphicsView->height(), this);
+    connect(graphScene, SIGNAL(signalNodesChanged(QList<QVector<float> >)), antAlgorithm, SLOT(setWeightM(QList< QVector<float> >)));
     ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsView->setScene(graphScene);
 
@@ -25,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete antAlgorithm;
     delete ui;
 }
 
@@ -75,6 +80,10 @@ void MainWindow::createActions()
     actionRemovePoint = new QAction(QIcon(":/images/minus.png"), tr("Удалить"), this);
     actionRemovePoint->setShortcut(QKeySequence::Delete);
     connect(actionRemovePoint, SIGNAL(triggered()), graphScene, SLOT(deleteSelectedItems()));
+
+    //actions algorithm
+    actionRunAlgorithm = new QAction(QIcon(), tr("Запустить"), this);
+    connect(actionRunAlgorithm, SIGNAL(triggered()), this, SLOT(runAnts()));
 }
 
 void MainWindow::createMenus()
@@ -95,4 +104,12 @@ void MainWindow::createToolBars()
     toolBarModes->addActions(actionGroupModes->actions());
     toolBarModes->addSeparator();
     toolBarModes->addAction(actionRemovePoint);
+
+    toolBarAlgorithm = addToolBar(tr("Algorithm tolbar"));
+    toolBarAlgorithm->addAction(actionRunAlgorithm);
+}
+
+void MainWindow::runAnts()
+{
+    antAlgorithm->run(graphScene->getInit(), graphScene->getFinit());
 }

@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 
-class GraphScene;
 class QActionGroup;
+class AntAlgorithm;
+class GraphScene;
 
 namespace Ui {
     class MainWindow;
@@ -13,9 +14,6 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
-private:
-    GraphScene *graphScene;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -27,6 +25,8 @@ protected:
 private:
     Ui::MainWindow *ui;
 
+    GraphScene *graphScene;
+
     QActionGroup *actionGroupModes;
     QAction *actionSetModeSelect;
     QAction *actionSetModeAddPoint;
@@ -37,13 +37,21 @@ private:
     QAction *actionSetPointModeFinit;
     QAction *actionRemovePoint;
 
+    QAction *actionRunAlgorithm;
+
     QMenu *menuPoint;
 
     QToolBar *toolBarModes;
+    QToolBar *toolBarAlgorithm;
+
+    AntAlgorithm *antAlgorithm;
 
     void createActions();
     void createMenus();
     void createToolBars();
+
+private slots:
+    void runAnts();
 };
 
 #endif // MAINWINDOW_H
