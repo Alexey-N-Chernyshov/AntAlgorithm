@@ -7,17 +7,18 @@
 
 GraphicsEdgeItem::GraphicsEdgeItem(GraphicsNodeItem *sourceNode, GraphicsNodeItem *destNode, QGraphicsItem *parent) :
     QGraphicsItem(parent),
+    source(sourceNode),
+    dest(destNode),
+    m_color(Qt::darkGray),
     lowerValue(0.),
     showLowerValue(false)
 {
-    source = sourceNode;
     sourceNode->addEdge(this);
-    dest = destNode;
     destNode->addEdge(this);
-    setFlags(ItemIsSelectable | ItemSendsGeometryChanges | ItemIsFocusable);
-    setZValue(-2);
     line = new QGraphicsLineItem(this);
     upperTextItem = new GraphicsTextItem("1", this);
+    setFlags(ItemIsSelectable | ItemSendsGeometryChanges | ItemIsFocusable);
+    setZValue(-2);
 }
 
 GraphicsEdgeItem::~GraphicsEdgeItem()
@@ -37,6 +38,11 @@ int GraphicsEdgeItem::type() const
     return Type;
 }
 
+void GraphicsEdgeItem::setColor(QColor color)
+{
+    m_color = color;
+}
+
 void GraphicsEdgeItem::setLowerValue(double val)
 {
     lowerValue = val;
@@ -47,6 +53,15 @@ void GraphicsEdgeItem::setShowLowerValue(bool val)
     showLowerValue = val;
 }
 
+const GraphicsNodeItem *GraphicsEdgeItem::getSourceNode() const
+{
+    return source;
+}
+
+const GraphicsNodeItem *GraphicsEdgeItem::getDestinationNode() const
+{
+    return dest;
+}
 
 QRectF GraphicsEdgeItem::boundingRect() const
 {
@@ -67,7 +82,7 @@ void GraphicsEdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     if (!source || !dest)
         return;
 
-    QColor colorLine = Qt::darkGray;
+    QColor colorLine = m_color;
     if (isSelected())
         colorLine = colorLine.lighter(150);
 

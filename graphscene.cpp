@@ -7,6 +7,7 @@
 GraphScene::GraphScene(int w, int h, QObject *parent) :
         QGraphicsScene(parent),
         m_mode(AddPointMode),
+        startLineNode(NULL),
         line(NULL),
         initialNode(NULL),
         finitNode(NULL)
@@ -46,10 +47,9 @@ void GraphScene::setInitialPoint()
         {
             if (initialNode)
                 initialNode->setTypeNode(GraphicsNodeItem::IntermediateNode);
-            initialNode = qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0]);
+            initialNode = qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems().first());
             initialNode->setTypeNode(GraphicsNodeItem::InitialNode);
         }
-
     update();
 }
 
@@ -57,7 +57,7 @@ void GraphScene::setIntermediatePoint()
 {
     if (!selectedItems().isEmpty())
         if (selectedItems().first()->type() == GraphicsNodeItem::Type)
-            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0])->setTypeNode(GraphicsNodeItem::IntermediateNode);
+            qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems().first())->setTypeNode(GraphicsNodeItem::IntermediateNode);
     update();
 }
 
@@ -68,7 +68,7 @@ void GraphScene::setFinitPoint()
         {
             if (finitNode)
                 finitNode->setTypeNode(GraphicsNodeItem::IntermediateNode);
-            finitNode = qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems()[0]);
+            finitNode = qgraphicsitem_cast<GraphicsNodeItem *>(selectedItems().first());
             finitNode->setTypeNode(GraphicsNodeItem::FinitNode);
         }
     update();
@@ -88,6 +88,7 @@ void GraphScene::deleteSelectedItems()
             initialNode = NULL;
         if (item == finitNode)
             finitNode = NULL;
+        listNodes.removeAll(qgraphicsitem_cast<GraphicsNodeItem *>(item));
         delete item;
     }
 }
@@ -102,12 +103,14 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         case AddPointMode:
         {
              GraphicsNodeItem *newNode = new GraphicsNodeItem(menu);
+             //first node automatically set to initial
              if (items().isEmpty())
              {
                  newNode->setTypeNode(GraphicsNodeItem::InitialNode);
                  initialNode = newNode;
              }
              addItem(newNode);
+             listNodes.append(newNode);
              newNode->setPos(event->scenePos());
              break;
         }
@@ -116,9 +119,10 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             QGraphicsItem *startItem = itemAt(event->scenePos());
             if ((startItem) && (startItem->type() == GraphicsNodeItem::Type))
             {
-                line = new QGraphicsLineItem(QLineF(startItem->pos(), startItem->pos()), 0, this);
+                startLineNode = qgraphicsitem_cast<GraphicsNodeItem *>(startItem);
+                line = new QGraphicsLineItem(QLineF(startLineNode->pos(), event->scenePos()), 0, this);
                 line->setPen(QPen(QColor(Qt::darkGray).lighter(150), 3));
-                line->setZValue(-3);
+                line->setZValue(-4);
             }
             break;
         }
@@ -135,7 +139,7 @@ void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if ((m_mode == AddLineMode) && (line))
     {
         clearSelection();
-        itemAt(line->line().p1())->setSelected(true);
+        startLineNode->setSelected(true);
         QGraphicsItem *hoveredItem = itemAt(event->scenePos());
         if (hoveredItem && (hoveredItem->type() == GraphicsNodeItem::Type))
             hoveredItem->setSelected(true);
@@ -149,15 +153,18 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (m_mode == AddLineMode)
     {
-        if (line)
+        QGraphicsItem *destItem = itemAt(event->scenePos());
+        if ((line) && (destItem) && (destItem->type() == GraphicsNodeItem::Type))
         {
-            QGraphicsItem *destItem = itemAt(event->scenePos());
-            if (destItem && (destItem->type() == GraphicsNodeItem::Type))
+            GraphicsNodeItem *destNode = qgraphicsitem_cast<GraphicsNodeItem *>(destItem);
+            if (!destNode->isConnected(startLineNode))
             {
-                GraphicsEdgeItem *newEdge = new GraphicsEdgeItem(qgraphicsitem_cast<GraphicsNodeItem *>(itemAt(line->line().p1())),
-                                                                 qgraphicsitem_cast<GraphicsNodeItem *>(destItem));
+                GraphicsEdgeItem *newEdge = new GraphicsEdgeItem(startLineNode, destNode);
                 addItem(newEdge);
             }
+
+            startLineNode = NULL;
+
             removeItem(line);
             if (line)
                 delete line;

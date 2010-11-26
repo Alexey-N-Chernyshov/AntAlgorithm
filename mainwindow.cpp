@@ -7,8 +7,6 @@
 #include "ui_mainwindow.h"
 #include "graphscene.h"
 
-#include <QGraphicsEllipseItem>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)

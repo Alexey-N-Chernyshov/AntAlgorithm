@@ -75,7 +75,7 @@ void GraphicsNodeItem::setTypeNode(TypeNode typeNode)
     m_type = typeNode;
 }
 
-int GraphicsNodeItem::typeNode()
+int GraphicsNodeItem::typeNode() const
 {
     return m_type;
 }
@@ -87,18 +87,27 @@ void GraphicsNodeItem::addEdge(GraphicsEdgeItem *edge)
 
 void GraphicsNodeItem::removeEdge(GraphicsEdgeItem *edge)
 {
-    edges.removeAt(edges.indexOf(edge));
+    edges.removeAll(edge);
+}
+
+bool GraphicsNodeItem::isConnected(GraphicsNodeItem *otherNode)
+{
+    foreach (GraphicsEdgeItem *edge, edges)
+        if ((edge->getSourceNode() == otherNode) || (edge->getDestinationNode() == otherNode))
+            return true;
+    return false;
 }
 
 QVariant GraphicsNodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    switch (change) {
-    case ItemPositionHasChanged:
-        foreach (GraphicsEdgeItem *edge, edges)
-            edge->update();
-        break;
-    default:
-        break;
+    switch (change)
+    {
+        case ItemPositionHasChanged:
+            foreach (GraphicsEdgeItem *edge, edges)
+                edge->update();
+            break;
+        default:
+            break;
     };
 
     return QGraphicsItem::itemChange(change, value);

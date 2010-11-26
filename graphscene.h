@@ -26,6 +26,7 @@ public slots:
     void setInitialPoint();
     void setIntermediatePoint();
     void setFinitPoint();
+
     void deleteSelectedItems();
 
 protected:
@@ -36,9 +37,11 @@ protected:
 private:
     QMenu *menu;
     Mode m_mode;
+    GraphicsNodeItem *startLineNode;
     QGraphicsLineItem *line;
     GraphicsNodeItem *initialNode;
     GraphicsNodeItem *finitNode;
+    QList<GraphicsNodeItem *> listNodes;
 };
 
 #endif // GRAPHSCENE_H

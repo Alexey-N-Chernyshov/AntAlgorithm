@@ -14,8 +14,11 @@ public:
     ~GraphicsEdgeItem();
 
     int type() const;
+    void setColor(QColor color);
     void setLowerValue(double val);
     void setShowLowerValue(bool val);
+    const GraphicsNodeItem *getSourceNode() const;
+    const GraphicsNodeItem *getDestinationNode() const;
 
 protected:
     QRectF boundingRect() const;
@@ -26,7 +29,7 @@ private:
     GraphicsNodeItem *source, *dest;
     GraphicsTextItem *upperTextItem;
     QGraphicsLineItem *line;
-
+    QColor m_color;
     double lowerValue;
     bool showLowerValue;
 };

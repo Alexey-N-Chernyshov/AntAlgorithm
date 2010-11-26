@@ -17,9 +17,10 @@ public:
 
     int type() const;
     void setTypeNode(TypeNode typeNode);
-    int typeNode();
+    int typeNode() const;
     void addEdge(GraphicsEdgeItem *edge);
     void removeEdge(GraphicsEdgeItem *edge);
+    bool isConnected(GraphicsNodeItem *otherNode);
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);

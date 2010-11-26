@@ -12,6 +12,7 @@ GraphicsTextItem::GraphicsTextItem(QString str, QGraphicsItem *parent) :
     setTextWidth(40);
     setPlainText(str);
 
+    //centered text
     QTextCursor  cursor = textCursor();
     QTextBlockFormat bfmt = cursor.blockFormat();
     bfmt.setAlignment(Qt::AlignCenter);
