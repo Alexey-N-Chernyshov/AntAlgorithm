@@ -11,13 +11,14 @@ class AntAlgorithm : public QObject
 public:
     explicit AntAlgorithm(QObject *parent = 0);
 
-    void run(int init, int finit);
+    void run(int init, int finit, int times);
     QVector<float> calculateProbability(QList<int> path, int node);
     void markPath(QList<int> path);
     QList<int> getOptimalPath(int init, int finit);
 
 public slots:
     void setWeightM(QList< QVector<float> > weights);
+    void setParam(float vAlpha, float vBeta, float vVaporizationSpeed, float vMark);
 
 signals:
     void strToLog(QString str);

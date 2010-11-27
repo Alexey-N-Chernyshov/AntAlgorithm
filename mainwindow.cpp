@@ -4,6 +4,7 @@
 #include <QButtonGroup>
 #include <QMenu>
 #include <QErrorMessage>
+#include <QSpinBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "antalgorithm.h"
@@ -87,7 +88,7 @@ void MainWindow::createActions()
     connect(actionRemovePoint, SIGNAL(triggered()), graphScene, SLOT(deleteSelectedItems()));
 
     //actions algorithm
-    actionRunAlgorithm = new QAction(QIcon(), tr("Запустить"), this);
+    actionRunAlgorithm = new QAction(tr("Запустить"), this);
     connect(actionRunAlgorithm, SIGNAL(triggered()), this, SLOT(runAnts()));
 }
 
@@ -112,11 +113,15 @@ void MainWindow::createToolBars()
 
     toolBarAlgorithm = addToolBar(tr("Algorithm tolbar"));
     toolBarAlgorithm->addAction(actionRunAlgorithm);
+    spinBox = new QSpinBox(this);
+    spinBox->setValue(50);
+    spinBox->setMaximum(1000);
+    toolBarAlgorithm->addWidget(spinBox);
 }
 
 void MainWindow::runAnts()
 {
-    antAlgorithm->run(graphScene->getInit(), graphScene->getFinit());
+    antAlgorithm->run(graphScene->getInit(), graphScene->getFinit(), spinBox->value());
 }
 
 void MainWindow::addToLog(QString str)
@@ -127,4 +132,12 @@ void MainWindow::addToLog(QString str)
 void MainWindow::showError(QString str)
 {
     errMsg->showMessage(str);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    antAlgorithm->setParam(ui->doubleSpinBoxAlpha->value(),
+                           ui->doubleSpinBoxBeta->value(),
+                           ui->doubleSpinBoxVaporizationSpeed->value(),
+                           ui->doubleSpinBoxMarkValue->value());
 }

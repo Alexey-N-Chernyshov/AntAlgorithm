@@ -5,6 +5,7 @@
 
 class QActionGroup;
 class QErrorMessage;
+class QSpinBox;
 class AntAlgorithm;
 class GraphScene;
 
@@ -46,7 +47,7 @@ private:
     QAction *actionRunAlgorithm;
 
     QMenu *menuPoint;
-
+    QSpinBox *spinBox;
     QToolBar *toolBarModes;
     QToolBar *toolBarAlgorithm;
 
@@ -57,6 +58,7 @@ private:
     void createToolBars();
 
 private slots:
+    void on_pushButton_clicked();
     void runAnts();
 };
 

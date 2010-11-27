@@ -25,7 +25,15 @@ void AntAlgorithm::setWeightM(QList<QVector<float> > weights)
         attractivenessM.append(QVector<float>(n, 0.));
 }
 
-void AntAlgorithm::run(int init, int finit)
+void AntAlgorithm::setParam(float vAlpha, float vBeta, float vVaporizationSpeed, float vMark)
+{
+    alpha = vAlpha;
+    beta = vBeta;
+    vaporizationSpeed = vVaporizationSpeed;
+    mark = vMark;
+}
+
+void AntAlgorithm::run(int init, int finit, int times)
 {
     if (init < 0)
     {
@@ -42,7 +50,7 @@ void AntAlgorithm::run(int init, int finit)
     emit strToLog(tr("Матрица расстояний:"));
     showM(weightM);
 
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < times; ++i)
     {
         emit strToLog(tr("\nАгент №%1").arg(i).append(tr(" начал проход.")));
         Ant *ant = new Ant(this);
