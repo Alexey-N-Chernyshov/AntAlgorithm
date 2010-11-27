@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class QActionGroup;
+class QErrorMessage;
 class AntAlgorithm;
 class GraphScene;
 
@@ -19,6 +20,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void addToLog(QString str);
+    void showError(QString str);
+
 protected:
     void changeEvent(QEvent *e);
 
@@ -26,6 +31,7 @@ private:
     Ui::MainWindow *ui;
 
     GraphScene *graphScene;
+    QErrorMessage *errMsg;
 
     QActionGroup *actionGroupModes;
     QAction *actionSetModeSelect;

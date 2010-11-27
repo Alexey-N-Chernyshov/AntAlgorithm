@@ -1,6 +1,5 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QVector>
-
 #include "graphicsnodeitem.h"
 #include "graphicsedgeitem.h"
 #include "graphscene.h"

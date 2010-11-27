@@ -1,8 +1,7 @@
+#include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QMenu>
-#include <QGraphicsSceneContextMenuEvent>
-
 #include "graphicsnodeitem.h"
 #include "graphicsedgeitem.h"
 

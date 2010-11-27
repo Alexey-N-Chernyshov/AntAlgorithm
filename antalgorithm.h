@@ -4,10 +4,6 @@
 #include <QObject>
 #include <QVector>
 
-//////////////
-#include <QDebug>
-///////////////
-
 class AntAlgorithm : public QObject
 {
     Q_OBJECT
@@ -24,9 +20,13 @@ public slots:
     void setWeightM(QList< QVector<float> > weights);
 
 signals:
+    void strToLog(QString str);
     void optimalPathFound(QList<int> optimalPath);
+    void showError(QString str);
 
 private:
+    void showM(QList<QVector<float> > m);
+
     float alpha;             // pheromon influence to choice
     float beta;              // distance influence to choice
     float vaporizationSpeed; // percent of feromon vaporization per step
@@ -34,12 +34,6 @@ private:
 
     QList< QVector<float> > weightM;
     QList< QVector<float> > attractivenessM;
-    //QList< QVector<float> > probabilityM;
-
-    ////////////////////
-    void showM(QList< QVector<float> > m);
-    ////////////////////
-
 };
 
 #endif // ANTALGORITHM_H

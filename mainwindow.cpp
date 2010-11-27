@@ -2,7 +2,8 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QButtonGroup>
-
+#include <QMenu>
+#include <QErrorMessage>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "antalgorithm.h"
@@ -15,11 +16,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QTextCodec::setCodecForTr(QTextCodec::codecForName("cp1251"));
 
+    errMsg = new QErrorMessage(this);
     antAlgorithm = new AntAlgorithm;
 
     graphScene = new GraphScene(ui->graphicsView->width(), ui->graphicsView->height(), this);
     connect(graphScene, SIGNAL(signalNodesChanged(QList<QVector<float> >)), antAlgorithm, SLOT(setWeightM(QList< QVector<float> >)));
     connect(antAlgorithm, SIGNAL(optimalPathFound(QList<int>)), graphScene, SLOT(drawOptimalPath(QList<int>)));
+    connect(antAlgorithm, SIGNAL(strToLog(QString)), this, SLOT(addToLog(QString)));
+    connect(antAlgorithm, SIGNAL(showError(QString)), this, SLOT(showError(QString)));
     ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsView->setScene(graphScene);
 
@@ -113,4 +117,14 @@ void MainWindow::createToolBars()
 void MainWindow::runAnts()
 {
     antAlgorithm->run(graphScene->getInit(), graphScene->getFinit());
+}
+
+void MainWindow::addToLog(QString str)
+{
+    ui->textBrowser->append(str);;
+}
+
+void MainWindow::showError(QString str)
+{
+    errMsg->showMessage(str);
 }

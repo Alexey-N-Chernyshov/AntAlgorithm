@@ -1,7 +1,6 @@
 #include <QTextCursor>
 #include <QTextBlockFormat>
 #include <QKeyEvent>
-
 #include "graphicstextitem.h"
 #include "graphscene.h"
 

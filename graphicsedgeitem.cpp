@@ -1,6 +1,5 @@
 #include <QGraphicsScene>
 #include <QPainter>
-
 #include "graphicsedgeitem.h"
 #include "graphicsnodeitem.h"
 #include "graphicstextitem.h"

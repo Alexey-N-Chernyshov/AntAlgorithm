@@ -9,7 +9,6 @@ Ant::Ant(AntAlgorithm *parent) :
 {
 }
 
-#include <QDebug>
 void Ant::run(int init, int finit)
 {
     int currentNode = init;
@@ -23,7 +22,6 @@ void Ant::run(int init, int finit)
             break;
         }
     }
-    qDebug() << path;
 }
 
 int Ant::step(QVector<float> a)
