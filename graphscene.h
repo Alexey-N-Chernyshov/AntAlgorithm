@@ -31,6 +31,8 @@ public slots:
 
     void deleteSelectedItems();
     void nodesChanged();
+    void drawEdgesGray();
+    void drawOptimalPath(QList<int> optimalPath);
 
 signals:
     void signalNodesChanged(QList< QVector<float> > weights);

@@ -109,6 +109,13 @@ QList <QPair<GraphicsNodeItem *, float> > GraphicsNodeItem::getConnections()
     return res;
 }
 
+void GraphicsNodeItem::colorLineTo(GraphicsNodeItem *toItem, QColor color)
+{
+    foreach (GraphicsEdgeItem *edge, edges)
+        if ((edge->getSourceNode() == toItem) || (edge->getDestinationNode() == toItem))
+            edge->setColor(color);
+}
+
 QVariant GraphicsNodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change)

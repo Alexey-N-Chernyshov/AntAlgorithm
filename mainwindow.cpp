@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     graphScene = new GraphScene(ui->graphicsView->width(), ui->graphicsView->height(), this);
     connect(graphScene, SIGNAL(signalNodesChanged(QList<QVector<float> >)), antAlgorithm, SLOT(setWeightM(QList< QVector<float> >)));
+    connect(antAlgorithm, SIGNAL(optimalPathFound(QList<int>)), graphScene, SLOT(drawOptimalPath(QList<int>)));
     ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsView->setScene(graphScene);
 

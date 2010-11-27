@@ -22,6 +22,7 @@ public:
     void removeEdge(GraphicsEdgeItem *edge);
     bool isConnected(GraphicsNodeItem *otherNode);
     QList <QPair<GraphicsNodeItem *, float> > getConnections();
+    void colorLineTo(GraphicsNodeItem *toItem, QColor color);
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);

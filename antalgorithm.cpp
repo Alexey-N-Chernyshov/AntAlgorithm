@@ -5,8 +5,10 @@
 
 AntAlgorithm::AntAlgorithm(QObject *parent) :
     QObject(parent),
-    alpha(1.),
-    beta(1.)
+    alpha(1.3),
+    beta(1.1),
+    vaporizationSpeed(0.05),
+    mark(2.0)
 {
 }
 
@@ -23,15 +25,23 @@ void AntAlgorithm::setWeightM(QList<QVector<float> > weights)
         attractivenessM.append(QVector<float>(n, 0.));
 
     ///////////////
-    showM(weightM);
+    //showM(weightM);
     ///////////////
 }
 
 void AntAlgorithm::run(int init, int finit)
 {
-    Ant *ant = new Ant(this);
-    ant->run(init, finit);
-    delete ant;
+    for (int i = 0; i < 10; ++i)
+    {
+        Ant *ant = new Ant(this);
+        ant->run(init, finit);
+        delete ant;
+    }
+
+    emit optimalPathFound(getOptimalPath(init, finit));
+
+    /////////////
+    qDebug() << "opt " << getOptimalPath(init, finit);
 }
 
 QVector<float> AntAlgorithm::calculateProbability(QList<int> path, int node)
@@ -54,9 +64,53 @@ QVector<float> AntAlgorithm::calculateProbability(QList<int> path, int node)
 
 void AntAlgorithm::markPath(QList<int> path)
 {
-//    for (QList<int>::iterator i = path.begin(); i != path.end(); ++i)
-//        attractivenessM[*i] = attractivenessM[*i] * (1 - vaporizationSpeed) + 1 / weightM.at(i);
+    //vaporize
+    for (QList< QVector<float> >::iterator i = attractivenessM.begin(); i!= attractivenessM.end(); ++i)
+        for (QVector<float>::iterator j = (*i).begin(); j != (*i).end(); ++j)
+            (*j) *= (1 - vaporizationSpeed);
+
+    //and mark
+    int line = path.first();
+    float pathLength = 0.;
+    for (QList<int>::iterator i = (path.begin() + 1); i != path.end(); ++i)
+    {
+        pathLength += weightM.at(line).at(*i);
+        line = (*i);
+    }
+    line = path.first();
+    for (QList<int>::iterator i = (path.begin() + 1); i != path.end(); ++i)
+    {
+        attractivenessM[line][*i] += mark / pathLength;
+        line = (*i);
+    }
+
+    //////////////////////
+    qDebug() << "len " << pathLength;
+    qDebug() << "attr";
+    showM(attractivenessM);
 //    recalculateAttractiveness();
+}
+
+QList<int> AntAlgorithm::getOptimalPath(int init, int finit)
+{
+    int cur = init;
+    QList<int> res;
+    for (int iter = 0; iter < attractivenessM.count(); ++iter)
+    {
+        res.append(cur);
+        if (cur == finit)
+            break;
+        float max = attractivenessM.at(cur).first();
+        int maxIndex = 0;
+        for (int i = 1; i < attractivenessM.at(cur).count(); ++i)
+            if (max < attractivenessM.at(cur).at(i))
+            {
+                max = attractivenessM.at(cur).at(i);
+                maxIndex = i;
+            }
+        cur = maxIndex;
+    }
+    return res;
 }
 
 /////////////////////////////////////////////

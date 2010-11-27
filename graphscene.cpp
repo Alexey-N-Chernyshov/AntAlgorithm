@@ -121,7 +121,22 @@ void GraphScene::deleteSelectedItems()
 
 void GraphScene::nodesChanged()
 {
+    drawEdgesGray();
     emit signalNodesChanged(getWeights());
+}
+
+void GraphScene::drawEdgesGray()
+{
+    foreach (QGraphicsItem *item, items())
+        if (item->type() == GraphicsEdgeItem::Type)
+            qgraphicsitem_cast<GraphicsEdgeItem *>(item)->setColor(Qt::darkGray);
+}
+
+void GraphScene::drawOptimalPath(QList<int> optimalPath)
+{
+    drawEdgesGray();
+    for (int i = 0; i < optimalPath.count() - 1; ++i)
+        listNodes.at(optimalPath.at(i))->colorLineTo(listNodes.at(optimalPath.at(i + 1)), Qt::green);
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
